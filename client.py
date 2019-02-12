@@ -52,19 +52,19 @@ def main():
 #注册功能
 def do_register(sockfd):
     while True:
-        username = input('请输入用户名>>:')
+        username = input('请输入用户名>>:') 
         password = getpass.getpass()
         password1 = getpass.getpass('again:')
-        if (' ' in username) and (' ' in password):
+        if (' ' in username) or (' ' in password):
             print('您输入的用户名和密码不能有空格')
             continue
         elif password != password1:
             print('两次输入的密码不一致,请确认后再行输入!')
             continue
 
-        msg = 'R %S %S'%(username,password)
+        msg = 'R %s %s'%(username,password)
         sockfd.sendto(msg.encode())
-        data = s.recvfrom(128).decode()
+        data = sockfd.recvfrom(128).decode()
         if data == 'OK':
             print('注册成功')
         elif data == 'EXIST':
