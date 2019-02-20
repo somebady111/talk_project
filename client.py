@@ -2,7 +2,7 @@
 #coding=utf-8
 #客户端
 '''
-udp协议
+tcp传输协议
 一级界面:选项功能，登录，注册
 功能:登录，注册
 二级界面:查询界面,并打印出相关标签
@@ -14,12 +14,24 @@ import sys
 import time
 import getpass
 
+
+
 #创建主函数
 def main():
     print('欢迎使用xxx')
 
-    #创建套接字数据报
-    sockfd = socket(AF_INET,SOCK_DGRAM)
+    HOST = sys.argv[1]
+    PORT = int(sys.argv[2])
+    ADDR = (HOST,PORT)
+
+    #创建套接字
+    sockfd = socket()
+    try:
+        sockfd.connect(ADDR)
+    except Exception as e:
+        print(e)
+        return
+
 
     while True:
         time.sleep(1)
@@ -47,7 +59,9 @@ def main():
 
         else:
             print('您的输入不再选项中!')
+            sys.stdin.flush()
             continue
+    
 
 #注册功能
 def do_register(sockfd):
@@ -63,8 +77,8 @@ def do_register(sockfd):
             continue
 
         msg = 'R %s %s'%(username,password)
-        sockfd.sendto(msg.encode())
-        data = sockfd.recvfrom(128).decode()
+        sockfd.send(msg.encode())
+        data = sockfd.recv(128).decode()
         if data == 'OK':
             print('注册成功')
         elif data == 'EXIST':
@@ -78,8 +92,8 @@ def do_login(sockfd):
     username = input('请输入您的用户名>>:')
     password = getpass.getpass()
     msg = "L %s %s"%(username,password)
-    sockfd.sento(msg.encode())
-    data = sockfd.recvfrom(128)
+    sockfd.send(msg.encode())
+    data = sockfd.recv(128)
     if data == 'OK':
         print('登录成功!')
         time.sleep(0.2)
@@ -92,7 +106,7 @@ def login(s):
     print('欢迎来到xxx您可在此查询您的需求')
     message = input('请输入您的需求>>:')
     msg = 'S %s'%message
-    data = s.sendto(msg.encode())
+    data = s.send(msg.encode())
     if data == 'OK':
         print(data.decode())
     else:
