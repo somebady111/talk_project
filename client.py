@@ -65,6 +65,7 @@ def main():
 
 #注册功能
 def do_register(sockfd):
+    #客户端此处存在发送数据错误
     while True:
         username = input('请输入用户名>>:') 
         password = getpass.getpass()
