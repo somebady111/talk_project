@@ -92,20 +92,19 @@ def do_register(c,db,data):
         db.rollback()
         c.send(b'False')
 def do_login(c,db,data):
-    while True:
-        name = data.split(' ')[1]
-        password = data.split(' ')[2]
+    name = data.split(' ')[1]
+    password = data.split(' ')[2]
 
-        #创建游标对象
-        cursor = db.cursor()
-        #编写sql语句
-        sql = "select * from user where username = '%s'"%name
-        r = cursor.fetchone()
-
-        if r != None:
-            c.send(b'OK')
-        else:
-            c.send(b'fault')
+     #创建游标对象
+    cursor = db.cursor()
+    #编写sql语句
+    sql = "select * from user where username = '%s' and password = '%s'"%(name,password)
+    cursor.execute(sql)
+    r = cursor.fetchone()
+    if r == None:
+        c.send(b'false')
+    else:
+        c.send(b'OK')
 
 
 main()
