@@ -94,7 +94,7 @@ def do_login(sockfd):
     password = getpass.getpass()
     msg = "L %s %s"%(username,password)
     sockfd.send(msg.encode())
-    data = sockfd.recv(128)
+    data = sockfd.recv(128).decode()
     if data == 'OK':
         print('登录成功!')
         time.sleep(0.2)
