@@ -57,8 +57,9 @@ def main():
 
 #处理子进程
 def do_child(c,db):
+    #此处存在客户端接受问题
     while True:
-        data = c.recv(128)
+        data = c.recv(128).decode()
         if data[0] == 'L':
             do_login(c,db,data)
         elif data[0] == 'R':
