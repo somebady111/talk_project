@@ -105,12 +105,13 @@ def do_login(sockfd):
 #登录后进入二级界面
 def login(s):
     print('欢迎来到xxx您可在此查询您的需求')
-    message = input('请输入您的需求>>:')
+    message = input('在此进行查询>>:')
     msg = 'S %s'%message
-    data = s.send(msg.encode())
-    if data == 'OK':
-        print(data.decode())
+    s.send(msg.encode())
+    data = s.recv(128).decode()
+    if data == 'false':
+       print('您查找的信息不存在!')
     else:
-        print('您查找的信息不存在!')
+       print(data)
 
 main()
