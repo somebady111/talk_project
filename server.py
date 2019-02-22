@@ -106,5 +106,25 @@ def do_login(c,db,data):
     else:
         c.send(b'OK')
 
+def do_search(c,db,data):
+    word = data.split(' ')[1]
+
+    #创建游标对象
+    cursor = db.cursor()
+
+    try:
+        #sql语句
+        sql = "select * from message where 关键词 = '%s'"%word
+        #执行游标
+        cursor.execute(sql)
+        #提交事务
+        db.commit()
+        #查找到一个关键词
+        r = cursor.fetchone()
+        c.send(r[2].encode())
+    except Exception:
+        #事务回滚
+        db.rollback()
+        c.send(b'false')
 
 main()
